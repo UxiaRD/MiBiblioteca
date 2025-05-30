@@ -1,52 +1,4 @@
-create database MiBiblioteca;
-
-create table localizaciones (
-id int auto_increment primary key,
-localizacion varchar(100) unique
-);
-
-create table editoriales (
-abreviatura char(3) primary key,
-editorial varchar(100) unique
-);
-
-create table autoras (
-id int auto_increment primary key,
-nombre varchar(100) unique,
-genero enum('M', 'F', 'O')
-);
-
-create table sagas (
-id int auto_increment primary key,
-nombre varchar(100),
-num_libros int,
-estado enum('Finalizada', 'En proceso')
-);
-
-create table libros (
-id int auto_increment primary key,
-titulo varchar(200),
-autora_id int,
-saga_id int,
-num_libro_saga int,
-estado enum('Leido', 'Pendiente', 'En Proceso'),
-foreign key (autora_id) references autoras(id),
-foreign key (saga_id) references sagas(id)
-);
-
-create table ejemplares (
-id int auto_increment primary key,
-id_libro int,
-ed_abrev char(3),
-num_paginas int,
-edicion int,
-año_1aEd year,
-ISBN varchar(50),
-localizacion_id int,
-foreign key (id_libro) references libros(id),
-foreign key (ed_abrev) references editoriales(abreviatura),
-foreign key (localizacion_id) references localizaciones(id)
-);
+use MiBlibloteca;
 
 -- INSERCCIÓN DE DATOS
 insert into localizaciones (localizacion) values
@@ -375,25 +327,4 @@ insert into ejemplares (id_libro, ed_abrev, num_paginas, edicion, año_1aEd, ISB
 ( 103,'MOL',256 ,null ,'1959',null,1 ),
 ( 104,'PEN',270 ,null ,'2016','978-0-375-82274-2',1 ),
 ( 105,'BLO',331 ,null ,'1997','978-1-4088-5565-2-81',1 );
-
-
--- Procedimiento para saber el estado de los libros
-delimiter //
-create procedure estado_libros(in estado_libros varchar(50))
-begin
-	select * from libros where estado = estado_libros;
-end;
-//
-delimiter ;
-
-call estado_libros('En Proceso');
-call estado_libros('Pendiente');
-
-
-
-
-
-
-
-
 
